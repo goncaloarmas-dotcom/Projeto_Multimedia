@@ -1,0 +1,24 @@
+body {
+  font-family: Arial, sans-serif;
+  font-size: 12pt;
+  background-color: #f0f0f0;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: Helvetica, Arial, sans-serif;
+  font-size: 24pt;
+  font-weight: bold;
+}
+
+input,
+textarea,
+select {
+  box-sizing: border-box;
+  background-color: white;
+  border: 5pt solid blue;
+  padding: 8px;
+}
