@@ -37,14 +37,24 @@
 
         <section class="ferramentas">
 
-            <article class="cartao" id="poesia">
-                <h2>01 - Analisador Poético</h2>
-                <p>
-                    Analisa poemas, conta palavras e explora
-                    o significado dos textos.
-                </p>
-                <a href="#poesia">Explorar ferramenta</a>
-            </article>
+            
+<article class="cartao" id="poesia">
+    <h2>01 - Analisador Poético e Semântico</h2>
+    <p>Escreve um poema e descobre mais sobre as palavras que utilizaste.</p>
+
+    <label for="poema">O teu poema:</label>
+    <textarea id="poema" placeholder="Escreve ou cola aqui o teu poema..."></textarea>
+
+    <button onclick="analisarPoema()">Analisar poema</button>
+
+    <div id="resultados">
+        <h3>Resultados da análise</h3>
+        <p>Número de palavras: <span id="totalPalavras">0</span></p>
+        <p>Número de caracteres: <span id="totalCaracteres">0</span></p>
+        <p>Palavra mais repetida: <span id="palavraRepetida">-</span></p>
+    </div>
+</article>
+
 
             <article class="cartao" id="multimedia">
                 <h2>02 - Validador Multimédia</h2>
