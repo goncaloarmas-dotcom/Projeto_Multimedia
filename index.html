@@ -1,4 +1,5 @@
 
+
 <!DOCTYPE html>
 <html lang="pt">
 <head>
@@ -7,9 +8,10 @@
 
     <title>MediaLab AI</title>
 
-   
+    <!-- Ligação ao CSS -->
+    <link rel="stylesheet" href="estilo.css">
 </head>
-<script src="script.js"></script>
+
 <body>
 
     <header>
@@ -28,7 +30,6 @@
 
         <section id="inicio" class="introducao">
             <h2>Bem-vindo ao MediaLab AI!</h2>
-
             <p>
                 Explora ferramentas interativas desenvolvidas
                 com conceitos de programação e Inteligência Artificial.
@@ -37,41 +38,74 @@
 
         <section class="ferramentas">
 
-            
-<article class="cartao" id="poesia">
-    <h2>01 - Analisador Poético e Semântico</h2>
-    <p>Escreve um poema e descobre mais sobre as palavras que utilizaste.</p>
+            <!-- FERRAMENTA 1 -->
+            <article class="cartao" id="poesia">
 
-    <label for="poema">O teu poema:</label>
-    <textarea id="poema" placeholder="Escreve ou cola aqui o teu poema..."></textarea>
+                <h2>01 - Analisador Poético e Semântico</h2>
 
-    <button onclick="analisarPoema()">Analisar poema</button>
+                <p>
+                    Escreve um poema e descobre mais sobre
+                    as palavras que utilizaste.
+                </p>
 
-    <div id="resultados">
-        <h3>Resultados da análise</h3>
-        <p>Número de palavras: <span id="totalPalavras">0</span></p>
-        <p>Número de caracteres: <span id="totalCaracteres">0</span></p>
-        <p>Palavra mais repetida: <span id="palavraRepetida">-</span></p>
-    </div>
-</article>
+                <label for="poema">O teu poema:</label>
 
+                <textarea
+                    id="poema"
+                    placeholder="Escreve ou cola aqui o teu poema..."
+                ></textarea>
 
+                <button onclick="analisarPoema()">
+                    Analisar poema
+                </button>
+
+                <div id="resultados">
+                    <h3>Resultados da análise</h3>
+
+                    <p>
+                        Número de palavras:
+                        <span id="totalPalavras">0</span>
+                    </p>
+
+                    <p>
+                        Número de caracteres:
+                        <span id="totalCaracteres">0</span>
+                    </p>
+
+                    <p>
+                        Palavra mais repetida:
+                        <span id="palavraRepetida">-</span>
+                    </p>
+                </div>
+
+            </article>
+
+            <!-- FERRAMENTA 2 -->
             <article class="cartao" id="multimedia">
+
                 <h2>02 - Validador Multimédia</h2>
+
                 <p>
                     Descobre resoluções, proporções de ecrã
                     e combinações de cores.
                 </p>
+
                 <a href="#multimedia">Explorar ferramenta</a>
+
             </article>
 
+            <!-- FERRAMENTA 3 -->
             <article class="cartao" id="quiz">
+
                 <h2>03 - Quiz Multimédia</h2>
+
                 <p>
                     Testa os teus conhecimentos sobre
                     multimédia e tecnologia.
                 </p>
+
                 <a href="#quiz">Explorar ferramenta</a>
+
             </article>
 
         </section>
@@ -82,6 +116,9 @@
         <p>MediaLab AI | Oficina de Multimédia | 12.º Ano</p>
         <p>Projeto desenvolvido com apoio da Inteligência Artificial.</p>
     </footer>
- <link rel="stylesheet" href="estilo.css">
+
+    <!-- Ligação ao JavaScript -->
+    <script src="script.js"></script>
+
 </body>
 </html>
