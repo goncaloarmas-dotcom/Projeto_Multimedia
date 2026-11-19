@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta
+        name="description"
+        content="Treina a tua lógica e rapidez com o BRAIN TRAINING HUB."
+    >
+    <title>BRAIN TRAINING HUB</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
+</head>
+<body>
+    <header class="hero">
+        <p class="eyebrow">DESAFIO DE RACIOCÍNIO</p>
+        <h1>BRAIN TRAINING HUB</h1>
+        <p>Treina a tua lógica. Pensa rápido. Descobre do que és capaz.</p>
+    </header>
+
+    <main>
+        <!-- Página inicial -->
+        <section id="page-home" class="page">
+            <div class="intro">
+                <h2>Bem-vindo ao desafio</h2>
+                <p>
+                    Uma plataforma interativa com três jogos de raciocínio.
+                    Completa os desafios e consulta a tua classificação final.
+                </p>
+            </div>
+
+            <div class="game-grid">
+                <article class="game-card">
+                    <span class="game-number">01</span>
+                    <h3>Logic Challenge</h3>
+                    <p>Adivinha um número entre 1 e 100 em até dez tentativas.</p>
+                </article>
+
+                <article class="game-card">
+                    <span class="game-number">02</span>
+                    <h3>Quick Quiz</h3>
+                    <p>Responde a cinco perguntas de cultura geral.</p>
+                </article>
+
+                <article class="game-card">
+                    <span class="game-number">03</span>
+                    <h3>Reaction Challenge</h3>
+                    <p>Resolve cinco desafios. Tens até dez segundos para cada resposta.</p>
+                </article>
+            </div>
+
+            <div class="score-info">
+                <h2>Sistema de pontuação</h2>
+                <ul>
+                    <li><strong>Logic Challenge:</strong> até 10 pontos. Menos tentativas dão mais pontos.</li>
+                    <li><strong>Quick Quiz:</strong> 2 pontos por resposta correta, até 10 pontos.</li>
+                    <li><strong>Reaction Challenge:</strong> 2 pontos por resposta certa dentro do tempo, até 10 pontos.</li>
+                    <li><strong>Pontuação máxima:</strong> 30 pontos.</li>
+                </ul>
+            </div>
+
+            <button id="start-button" class="button" type="button">
+                START CHALLENGE
+            </button>
+        </section>
+
+        <!-- Jogo 1: Logic Challenge -->
+        <section id="page-logic" class="page" hidden>
+            <div class="section-heading">
+                <span class="game-number">01</span>
+                <div>
+                    <p class="eyebrow">JOGO 1</p>
+                    <h2>Logic Challenge</h2>
+                </div>
+            </div>
+
+            <p>Adivinha o número secreto entre 1 e 100.</p>
+            <p id="logic-attempts" class="muted"></p>
+
+            <form id="logic-form" class="game-panel">
+                <label for="logic-guess">Introduz um número:</label>
+                <input
+                    id="logic-guess"
+                    type="number"
+                    min="1"
+                    max="100"
+                    step="1"
+                    required
+                >
+                <button class="button" type="submit">SUBMETER PALPITE</button>
+            </form>
+
+            <div id="logic-feedback" class="feedback" role="status" hidden></div>
+
+            <div id="logic-finished" hidden>
+                <p id="logic-score" class="score-line"></p>
+                <button id="to-quiz-button" class="button" type="button">
+                    CONTINUAR PARA O QUICK QUIZ
+                </button>
+            </div>
+        </section>
+
+        <!-- Jogo 2: Quick Quiz -->
+        <section id="page-quiz" class="page" hidden>
+            <div class="section-heading">
+                <span class="game-number">02</span>
+                <div>
+                    <p class="eyebrow">JOGO 2</p>
+                    <h2>Quick Quiz</h2>
+                </div>
+            </div>
+
+            <p>Seleciona uma resposta para cada uma das cinco perguntas.</p>
+
+            <form id="quiz-form">
+                <div class="quiz-list">
+                    <fieldset class="game-panel question">
+                        <legend>1. Qual planeta é conhecido como o Planeta Vermelho?</legend>
+                        <label><input type="radio" name="quiz-0" value="Vénus"> Vénus</label>
+                        <label><input type="radio" name="quiz-0" value="Marte"> Marte</label>
+                        <label><input type="radio" name="quiz-0" value="Júpiter"> Júpiter</label>
+                        <label><input type="radio" name="quiz-0" value="Mercúrio"> Mercúrio</label>
+                    </fieldset>
+
+                    <fieldset class="game-panel question">
+                        <legend>2. Quanto é 9 × 7?</legend>
+                        <label><input type="radio" name="quiz-1" value="56"> 56</label>
+                        <label><input type="radio" name="quiz-1" value="63"> 63</label>
+                        <label><input type="radio" name="quiz-1" value="72"> 72</label>
+                        <label><input type="radio" name="quiz-1" value="49"> 49</label>
+                    </fieldset>
+
+                    <fieldset class="game-panel question">
+                        <legend>3. Qual é a capital da Austrália?</legend>
+                        <label><input type="radio" name="quiz-2" value="Sydney"> Sydney</label>
+                        <label><input type="radio" name="quiz-2" value="Melbourne"> Melbourne</label>
+                        <label><input type="radio" name="quiz-2" value="Canberra"> Canberra</label>
+                        <label><input type="radio" name="quiz-2" value="Perth"> Perth</label>
+                    </fieldset>
+
+                    <fieldset class="game-panel question">
+                        <legend>4. Para que serve principalmente o HTML?</legend>
+                        <label><input type="radio" name="quiz-3" value="Estruturar páginas Web"> Estruturar páginas Web</label>
+                        <label><input type="radio" name="quiz-3" value="Editar fotografias"> Editar fotografias</label>
+                        <label><input type="radio" name="quiz-3" value="Criar folhas de cálculo"> Criar folhas de cálculo</label>
+                        <label><input type="radio" name="quiz-3" value="Proteger um computador contra vírus"> Proteger um computador contra vírus</label>
+                    </fieldset>
+
+                    <fieldset class="game-panel question">
+                        <legend>5. Quem escreveu a obra «Os Lusíadas»?</legend>
+                        <label><input type="radio" name="quiz-4" value="Fernando Pessoa"> Fernando Pessoa</label>
+                        <label><input type="radio" name="quiz-4" value="Eça de Queirós"> Eça de Queirós</label>
+                        <label><input type="radio" name="quiz-4" value="Luís de Camões"> Luís de Camões</label>
+                        <label><input type="radio" name="quiz-4" value="José Saramago"> José Saramago</label>
+                    </fieldset>
+                </div>
+
+                <div id="quiz-feedback" class="feedback" role="status" hidden></div>
+                <button id="quiz-submit" class="button" type="submit">
+                    VERIFICAR RESPOSTAS
+                </button>
+            </form>
+
+            <div id="quiz-results" class="results-list" hidden>
+                <h3>Resultados do Quick Quiz</h3>
+                <div id="quiz-result-items"></div>
+                <p id="quiz-score" class="score-line"></p>
+                <button id="to-reaction-button" class="button" type="button">
+                    CONTINUAR PARA O REACTION CHALLENGE
+                </button>
+            </div>
+        </section>
+
+        <!-- Jogo 3: Reaction Challenge -->
+        <section id="page-reaction" class="page" hidden>
+            <div class="section-heading">
+                <span class="game-number">03</span>
+                <div>
+                    <p class="eyebrow">JOGO 3</p>
+                    <h2>Reaction Challenge</h2>
+                </div>
+            </div>
+
+            <p>Cada desafio vale 2 pontos. Responde corretamente em até 10 segundos.</p>
+            <p id="reaction-progress" class="muted"></p>
+            <p class="timer-note">
+                O tempo é verificado ao submeter a resposta. Não é apresentado um cronómetro automático.
+            </p>
+
+            <div id="reaction-feedback" class="feedback" role="status" hidden></div>
+
+            <form id="reaction-form" class="game-panel">
+                <h3 id="reaction-question"></h3>
+                <label for="reaction-answer">A tua resposta:</label>
+                <input id="reaction-answer" type="text" autocomplete="off">
+                <button class="button" type="submit">SUBMETER RESPOSTA</button>
+            </form>
+
+            <div id="reaction-finished" hidden>
+                <h3>Resultado do Reaction Challenge</h3>
+                <div id="reaction-result-items" class="results-list"></div>
+                <p id="reaction-score" class="score-line"></p>
+                <button id="to-results-button" class="button" type="button">
+                    VER RESULTADOS FINAIS
+                </button>
+            </div>
+        </section>
+
+        <!-- Resultados finais -->
+        <section id="page-results" class="page" hidden>
+            <div class="section-heading">
+                <div>
+                    <p class="eyebrow">DESAFIO CONCLUÍDO</p>
+                    <h2>Resultados finais</h2>
+                </div>
+            </div>
+
+            <div class="score-grid">
+                <article class="score-card">
+                    <h3>Logic Challenge</h3>
+                    <p id="final-logic-score"></p>
+                </article>
+                <article class="score-card">
+                    <h3>Quick Quiz</h3>
+                    <p id="final-quiz-score"></p>
+                </article>
+                <article class="score-card">
+                    <h3>Reaction Challenge</h3>
+                    <p id="final-reaction-score"></p>
+                </article>
+            </div>
+
+            <div class="final-score">
+                <h2 id="final-total"></h2>
+                <p id="final-rating"></p>
+            </div>
+
+            <p class="notice">
+                Esta classificação representa apenas o desempenho nestes jogos.
+                Não mede cientificamente a inteligência nem o QI.
+            </p>
+
+            <button id="play-again-button" class="button" type="button">
+                PLAY AGAIN
+            </button>
+        </section>
+    </main>
+
+    <footer>
+        <p>BRAIN TRAINING HUB · Treina a tua mente ao teu ritmo.</p>
+    </footer>
+</body>
+</html>
