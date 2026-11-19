@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Treina a tua lógica e rapidez com o Brain Training Hub.">
+<title>Brain Training Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  color-scheme:dark;
+  --bg:#080a18; --surface:#12152b; --surface2:#191d3a; --line:#2a2f58;
+  --text:#eef0ff; --muted:#a3a9d1;
+  --violet:#8b5cf6; --cyan:#22d3ee; --ok:#4ade80; --bad:#fb7185; --warn:#fbbf24;
+  --grad:linear-gradient(90deg,var(--violet),var(--cyan));
+  --head:"Sora","Segoe UI",system-ui,sans-serif;
+  --body:"Inter","Segoe UI",system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:var(--bg);color:var(--text);font:400 1rem/1.6 var(--body)}
+.glow{position:fixed;inset:0;z-index:-1;pointer-events:none;
+  background:radial-gradient(60rem 30rem at 15% -10%,rgb(139 92 246/.28),transparent 60%),
+             radial-gradient(50rem 30rem at 100% 10%,rgb(34 211 238/.14),transparent 60%)}
+[hidden]{display:none!important}
+button,input{font:inherit}
+h1,h2,h3{font-family:var(--head);line-height:1.15;margin:0}
+h2{font-size:clamp(1.6rem,4vw,2.2rem);margin-bottom:.3rem}
+.sub{color:var(--muted);margin:.2rem 0 1.2rem}
+
+.top{display:flex;justify-content:space-between;align-items:center;gap:1rem;width:min(960px,calc(100% - 2rem));margin:1.2rem auto 0}
+.brand{display:flex;align-items:center;gap:.6rem;color:var(--text);text-decoration:none;font:700 1.05rem var(--head)}
+.logo{display:grid;place-items:center;width:2.2rem;height:2.2rem;border-radius:.7rem;background:var(--grad)}
+.pill{padding:.35rem .9rem;border:1px solid var(--line);border-radius:999px;background:var(--surface);color:var(--muted);font-size:.9rem}
+.pill strong{color:var(--text)}
+
+.stepper{display:flex;gap:.5rem;list-style:none;padding:0;width:min(960px,calc(100% - 2rem));margin:1.4rem auto 0}
+.stepper li{flex:1;padding-top:.6rem;border-top:4px solid var(--line);color:var(--muted);font-size:.85rem;transition:border-color .3s,color .3s}
+.stepper li.done{border-color:var(--violet)}
+.stepper li.active{border-color:var(--cyan);color:var(--text);font-weight:600}
+
+main{width:min(960px,calc(100% - 2rem));margin:1.8rem auto 3rem}
+
+.hero{padding:clamp(2rem,6vw,4rem) 0 2.2rem}
+.hero h1{font-size:clamp(2.4rem,8vw,4.6rem);font-weight:800;letter-spacing:-.02em;
+  background:linear-gradient(100deg,#fff 30%,#b9a4ff 70%,var(--cyan));-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p{max-width:34rem;margin:1rem 0 1.8rem;color:var(--muted);font-size:1.1rem}
+
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}
+.card{padding:1.4rem;border:1px solid var(--line);border-radius:18px;background:var(--surface);transition:transform .2s,border-color .2s}
+.card:hover{transform:translateY(-4px);border-color:var(--violet)}
+.card .ico{font-size:1.8rem}
+.card h3{margin:.6rem 0 .4rem;font-size:1.1rem}
+.card p{margin:0 0 .9rem;color:var(--muted);font-size:.95rem}
+.card b{color:var(--cyan);font-size:.85rem;font-weight:600}
+
+.btn{padding:.8rem 1.5rem;border:0;border-radius:12px;background:var(--grad);color:#07091a;font-weight:700;cursor:pointer;
+  transition:transform .15s,box-shadow .15s,filter .15s}
+.btn:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgb(139 92 246/.4)}
+.btn:disabled{opacity:.5;cursor:not-allowed;transform:none;box-shadow:none}
+.btn.wide{display:block;width:100%;margin-top:1rem}
+.btn:focus-visible,input:focus-visible,.opt:focus-visible,summary:focus-visible{outline:3px solid #c4b5fd;outline-offset:3px}
+
+.panel{margin:1rem 0;padding:1.4rem;border:1px solid var(--line);border-radius:18px;background:var(--surface)}
+.row{display:flex;gap:.7rem;margin-top:1rem}
+input[type=number],input[type=text]{flex:1;min-width:0;padding:.8rem 1rem;border:1px solid var(--line);border-radius:12px;background:var(--bg);color:var(--text);font-size:1.1rem}
+.question{font-size:1.25rem;font-weight:700}
+
+.feedback{margin:1rem 0 0;padding:.8rem 1rem;border-radius:12px;border:1px solid var(--line);background:var(--surface2)}
+.feedback.success{border-color:var(--ok);color:var(--ok)}
+.feedback.error{border-color:var(--bad);color:var(--bad)}
+.feedback.warning{border-color:var(--warn);color:var(--warn)}
+
+/* Logic */
+.range{position:relative;height:14px;border-radius:999px;background:var(--bg);border:1px solid var(--line);overflow:hidden}
+#range-fill{position:absolute;top:0;bottom:0;left:0;width:100%;background:var(--grad);border-radius:999px;transition:left .35s,width .35s}
+.range-text{margin:.7rem 0;font-weight:600}
+.dots{display:flex;gap:.4rem}
+.dots span{flex:1;height:8px;border-radius:99px;background:var(--line);transition:background .3s}
+.dots span.used{background:var(--violet)}
+.chips{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:1rem}
+.chip{padding:.2rem .7rem;border-radius:99px;background:var(--surface2);border:1px solid var(--line);font-size:.9rem;color:var(--muted)}
+.chip.ok{color:var(--ok);border-color:var(--ok)}
+
+/* Barras */
+.bar{height:8px;border-radius:99px;background:var(--bg);overflow:hidden;margin-bottom:1rem}
+.bar>div{height:100%;width:0;background:var(--grad);border-radius:99px;transition:width .6s ease}
+
+/* Quiz */
+.options{display:grid;gap:.7rem;margin-top:1.1rem}
+.opt{padding:.9rem 1.1rem;text-align:left;border:1px solid var(--line);border-radius:12px;background:var(--surface2);color:var(--text);cursor:pointer;transition:border-color .15s,background .15s}
+.opt:hover:not(:disabled){border-color:var(--violet)}
+.opt:disabled{cursor:default}
+.opt.right{border-color:var(--ok);background:rgb(74 222 128/.14)}
+.opt.wrong{border-color:var(--bad);background:rgb(251 113 133/.14)}
+
+/* Reaction */
+.timer-panel{text-align:center}
+.timer{position:relative;width:150px;height:150px;margin:0 auto 1.2rem;transition:transform .2s}
+.timer svg{width:100%;height:100%;transform:rotate(-90deg)}
+.track{fill:none;stroke:var(--line);stroke-width:7}
+.fill{fill:none;stroke:var(--cyan);stroke-width:7;stroke-linecap:round;stroke-dasharray:276.46;stroke-dashoffset:0;transition:stroke .3s}
+#timer-value{position:absolute;inset:0;display:grid;place-items:center;font:700 1.9rem var(--head)}
+#timer-icon{position:absolute;top:-6px;right:-6px;font-style:normal;font-size:1.5rem}
+.timer.warn .fill{stroke:var(--warn)}
+.timer.danger .fill{stroke:var(--bad)}
+.timer.danger{animation:pulse .45s ease-in-out infinite alternate}
+.timer.danger #timer-value{color:var(--bad)}
+@keyframes pulse{to{transform:scale(1.07)}}
+.timer-panel .row{max-width:30rem;margin-inline:auto}
+
+.explosion{position:relative;display:grid;place-items:center;min-height:130px;margin-bottom:1rem;border-radius:16px;overflow:hidden;
+  background:radial-gradient(circle,rgb(255 120 30/.5),rgb(30 10 20/.9) 70%);animation:flash .8s ease-out}
+.explosion strong{font:800 2rem var(--head);text-shadow:0 0 24px #ff6a00;z-index:1}
+.explosion .p{position:absolute;font-size:1.7rem;animation:fly 1.3s cubic-bezier(.2,.9,.4,1) forwards}
+@keyframes fly{from{transform:translate(0,0) scale(.5)}to{transform:translate(var(--x),var(--y)) scale(1.4);opacity:0}}
+@keyframes flash{from{filter:brightness(3)}to{filter:none}}
+.shake{animation:shake .55s both}
+@keyframes shake{20%{transform:translate(-8px,3px)}40%{transform:translate(7px,-3px)}60%{transform:translate(-5px,2px)}80%{transform:translate(3px,-1px)}}
+
+/* Novos jogos */
+.btn.ghost{background:transparent;border:1px solid var(--line);color:var(--muted)}
+.pads{display:grid;grid-template-columns:1fr 1fr;gap:.8rem;max-width:22rem;margin:0 auto}
+.pad{aspect-ratio:1;border:0;border-radius:22px;background:var(--c);opacity:.3;cursor:pointer;transition:opacity .12s,transform .12s,box-shadow .12s}
+.pad.lit{opacity:1;transform:scale(1.04);box-shadow:0 0 38px var(--c)}
+.opt.flash-ok{border-color:var(--ok);background:rgb(74 222 128/.2)}
+.opt.flash-no{border-color:var(--bad);background:rgb(251 113 133/.2)}
+
+/* Resultados */
+.results{text-align:center}
+.score-ring{position:relative;width:200px;height:200px;margin:0 auto}
+.score-ring svg{width:100%;height:100%;transform:rotate(-90deg)}
+.score-ring .fill{stroke-width:11;stroke-dasharray:439.8;stroke-dashoffset:439.8;stroke:var(--violet);transition:stroke-dashoffset 1.3s cubic-bezier(.2,.8,.2,1)}
+.score-ring .track{stroke-width:11}
+.score-ring>div{position:absolute;inset:0;display:grid;place-content:center}
+.score-ring strong{font:800 3.4rem/1 var(--head)}
+.score-ring span{color:var(--muted)}
+.rating{margin:1rem 0 .2rem;font:700 1.4rem var(--head)}
+.record{margin:0;color:var(--warn);font-weight:600}
+.breakdown{display:grid;gap:.2rem;margin-top:1.6rem;text-align:left}
+.breakdown>div{display:grid;grid-template-columns:10rem 1fr 3rem;align-items:center;gap:.8rem}
+.breakdown .bar{margin:0}
+.breakdown b{text-align:right}
+.breakdown span{color:var(--muted);font-size:.9rem}
+details summary{cursor:pointer;font-weight:600}
+#review{margin-top:1rem;display:grid;gap:.5rem}
+#review p{margin:0;padding:.6rem .9rem;border-radius:10px;background:var(--surface2);border-left:3px solid var(--line);font-size:.92rem}
+#review p.ok{border-color:var(--ok)}
+#review p.no{border-color:var(--bad)}
+.notice{padding:.8rem 1rem;border-left:3px solid var(--cyan);background:rgb(34 211 238/.07);color:var(--muted);font-size:.92rem}
+
+footer{padding:1.5rem;text-align:center;color:#7d83ad;font-size:.9rem}
+
+@media(max-width:700px){
+  .cards{grid-template-columns:1fr}
+  .breakdown>div{grid-template-columns:1fr 3rem;}
+  .breakdown>div>.bar{grid-column:1/-1;order:3}
+  .stepper li{font-size:.75rem}
+}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+/* Susto ao errar */
+.scare{position:fixed;inset:0;z-index:99;display:grid;place-items:center;pointer-events:none;
+  background:radial-gradient(circle,#5a0000 0%,#000 75%);animation:scareIn 1s steps(2,end) both}
+.scare span{font-size:min(60vmin,26rem);filter:drop-shadow(0 0 40px #f00);animation:scareZoom 1s ease-out both}
+@keyframes scareIn{0%,30%,60%{opacity:1}15%,45%{opacity:.55}100%{opacity:1}}
+@keyframes scareZoom{from{transform:scale(.4) rotate(-6deg)}20%{transform:scale(1.15) rotate(4deg)}to{transform:scale(1.3) rotate(-2deg)}}
+
+</style>
+</head>
+<body>
+<div class="glow" aria-hidden="true"></div>
+<div id="scare" class="scare" aria-hidden="true" hidden><span>💀</span></div>
+
+<header class="top">
+  <a class="brand" href="#" id="brand"><span class="logo">🧠</span> Brain Training Hub</a>
+  <span class="pill" title="Melhor pontuação neste navegador">Recorde <strong id="best">0</strong>/30</span>
+</header>
+
+<ol id="stepper" class="stepper" aria-label="Progresso" hidden>
+  <li>Lógica</li><li>Reação</li><li>Memória</li><li>Final</li>
+</ol>
+
+<main>
+  <!-- Início -->
+  <section id="page-home" class="page">
+    <div class="hero">
+      <h1>Pensa depressa.<br>Pensa bem.</h1>
+      <p>Três jogos curtos de raciocínio, reflexos e memória. No fim, vês quanto pontuaste em 30.</p>
+      <button id="start-button" class="btn" type="button">Começar o desafio</button>
+    </div>
+
+    <div class="cards">
+      <article class="card"><span class="ico">🎯</span><h3>Logic Challenge</h3>
+        <p>Descobre um número entre 1 e 100 em dez tentativas. Menos tentativas, mais pontos.</p><b>até 10 pts</b></article>
+      <article class="card"><span class="ico">💣</span><h3>Reaction Challenge</h3>
+        <p>Cinco desafios, dez segundos cada. Quando o tempo acaba, a bomba explode.</p><b>2 pts por resposta</b></article>
+      <article class="card"><span class="ico">🎵</span><h3>Memory Sequence</h3>
+        <p>Observa a sequência de cores e sons e repete-a. Cada ronda é mais longa.</p><b>1 pt por ronda</b></article>
+    </div>
+  </section>
+
+  <!-- Jogo 1 -->
+  <section id="page-logic" class="page" hidden>
+    <h2>Logic Challenge</h2>
+    <p class="sub">Adivinha o número secreto entre 1 e 100.</p>
+
+    <div class="panel">
+      <div class="range"><div id="range-fill"></div></div>
+      <p id="range-text" class="range-text"></p>
+      <div id="dots" class="dots" aria-label="Tentativas"></div>
+
+      <form id="logic-form" class="row">
+        <input id="logic-guess" type="number" min="1" max="100" step="1" inputmode="numeric" placeholder="O teu palpite" required aria-label="Palpite">
+        <button class="btn" type="submit">Tentar</button>
+      </form>
+      <p id="logic-feedback" class="feedback" role="status" hidden></p>
+      <div id="history" class="chips"></div>
+    </div>
+
+    <div id="logic-finished" hidden>
+      <button id="to-quiz-button" class="btn wide" type="button">Continuar para o Reaction Challenge</button>
+    </div>
+  </section>
+
+  <!-- Jogo 3 -->
+  <section id="page-reaction" class="page" hidden>
+    <h2>Reaction Challenge</h2>
+    <p id="reaction-progress" class="sub"></p>
+
+    <div id="reaction-box" class="panel timer-panel">
+      <div id="timer" class="timer" role="timer" aria-live="off">
+        <svg viewBox="0 0 100 100" aria-hidden="true">
+          <circle class="track" cx="50" cy="50" r="44"/>
+          <circle id="ring" class="fill" cx="50" cy="50" r="44"/>
+        </svg>
+        <span id="timer-value">10.0</span>
+        <i id="timer-icon" aria-hidden="true">⏱️</i>
+      </div>
+
+      <div id="explosion" class="explosion" hidden></div>
+
+      <form id="reaction-form">
+        <h3 id="reaction-question" class="question"></h3>
+        <div class="row">
+          <input id="reaction-answer" type="text" autocomplete="off" placeholder="A tua resposta" aria-label="Resposta">
+          <button class="btn" type="submit">Responder</button>
+        </div>
+      </form>
+      <p id="reaction-feedback" class="feedback" role="status" hidden></p>
+    </div>
+  </section>
+
+  <!-- Jogo 4 -->
+  <section id="page-memory" class="page" hidden>
+    <h2>Memory Sequence</h2>
+    <p id="mem-status" class="sub"></p>
+    <div class="panel">
+      <div id="pads" class="pads">
+        <button class="pad" style="--c:#22c55e" aria-label="Verde"></button><button class="pad" style="--c:#ef4444" aria-label="Vermelho"></button>
+        <button class="pad" style="--c:#facc15" aria-label="Amarelo"></button><button class="pad" style="--c:#3b82f6" aria-label="Azul"></button>
+      </div>
+      <button id="mem-start" class="btn wide" type="button">Começar</button>
+    </div>
+    <button id="mem-next" class="btn wide" type="button" hidden>Ver resultado final</button>
+  </section>
+
+  <!-- Resultados -->
+  <section id="page-results" class="page" hidden>
+    <h2>Resultado final</h2>
+
+    <div class="panel results">
+      <div class="score-ring">
+        <svg viewBox="0 0 160 160" aria-hidden="true">
+          <circle class="track" cx="80" cy="80" r="70"/>
+          <circle id="final-ring" class="fill" cx="80" cy="80" r="70"/>
+        </svg>
+        <div><strong id="final-total">0</strong><span>de 30</span></div>
+      </div>
+      <p id="final-rating" class="rating"></p>
+      <p id="final-record" class="record" hidden></p>
+
+      <div id="breakdown" class="breakdown"></div>
+    </div>
+
+    <details class="panel"><summary>Rever respostas</summary><div id="review"></div></details>
+
+    <p class="notice">Esta classificação mede apenas o desempenho nestes jogos. Não avalia cientificamente a inteligência nem o QI.</p>
+    <button id="play-again-button" class="btn wide" type="button">Jogar novamente</button>
+  </section>
+</main>
+
+<footer>Brain Training Hub · Treina a tua mente ao teu ritmo.</footer>
+<script>
+"use strict";
+
+// =============================================================================
+// PARTE 3 — BANCO DE 50+ DESAFIOS DO REACTION CHALLENGE
+// =============================================================================
+const reactionBank = [
+    // --- Matemática mental ---
+    { question: "Quanto é 17 + 28?", answer: "45", acceptable: ["45"] },
+    { question: "Quanto é 12 × 12?", answer: "144", acceptable: ["144"] },
+    { question: "Quanto é 200 - 76?", answer: "124", acceptable: ["124"] },
+    { question: "Quanto é 81 ÷ 9?", answer: "9", acceptable: ["9"] },
+    { question: "Quanto é 15 × 6?", answer: "90", acceptable: ["90"] },
+    { question: "Quanto é 250 + 175?", answer: "425", acceptable: ["425"] },
+    { question: "Quanto é metade de 186?", answer: "93", acceptable: ["93"] },
+    { question: "Quanto é 11 × 11?", answer: "121", acceptable: ["121"] },
+    { question: "Quanto é 1000 - 375?", answer: "625", acceptable: ["625"] },
+    { question: "Quanto é 144 ÷ 8?", answer: "18", acceptable: ["18"] },
+    { question: "Quanto é 8 × 9?", answer: "72", acceptable: ["72"] },
+    { question: "Quanto é 15 × 4?", answer: "60", acceptable: ["60"] },
+    { question: "Quanto é 100 - 37?", answer: "63", acceptable: ["63"] },
+    { question: "Quanto é 144 ÷ 9?", answer: "16", acceptable: ["16"] },
+    { question: "Quanto é 7²?", answer: "49", acceptable: ["49"] },
+    { question: "Quanto é 25 × 4?", answer: "100", acceptable: ["100"] },
+
+    // --- Sequências numéricas e padrões ---
+    { question: "Completa: 2, 6, 10, 14, ...", answer: "18", acceptable: ["18"] },
+    { question: "Completa: 2, 4, 8, 16, ...", answer: "32", acceptable: ["32"] },
+    { question: "Completa: 5, 10, 15, 20, ...", answer: "25", acceptable: ["25"] },
+    { question: "Completa: 1, 4, 9, 16, ...", answer: "25", acceptable: ["25"] },
+    { question: "Completa: 3, 6, 12, 24, ...", answer: "48", acceptable: ["48"] },
+    { question: "Completa: 100, 90, 80, 70, ...", answer: "60", acceptable: ["60"] },
+    { question: "Completa: 1, 1, 2, 3, 5, 8, ...", answer: "13", acceptable: ["13"] },
+    { question: "Completa: 10, 20, 30, 40, ...", answer: "50", acceptable: ["50"] },
+    { question: "Completa: 2, 5, 8, 11, ...", answer: "14", acceptable: ["14"] },
+    { question: "Completa: 50, 45, 40, 35, ...", answer: "30", acceptable: ["30"] },
+
+    // --- Raciocínio lógico ---
+    {
+        question: "Qual não pertence ao grupo: maçã, banana, cenoura, pera?",
+        answer: "Cenoura",
+        acceptable: ["cenoura"],
+    },
+    {
+        question: "Se ontem foi segunda-feira, que dia será amanhã?",
+        answer: "Quarta-feira",
+        acceptable: ["quarta-feira", "quarta feira", "quarta", "quartafeira"],
+    },
+    {
+        question: "Tenho 3 maçãs e dou 1. Quantas me restam?",
+        answer: "2",
+        acceptable: ["2", "duas", "2 macas"],
+    },
+    {
+        question: "Quantos meses têm 28 dias?",
+        answer: "12",
+        acceptable: ["12", "todos", "todos os 12", "12 meses", "os 12"],
+    },
+    {
+        question: "Se um relógio marca 3 horas, qual será a hora daqui a 5 horas?",
+        answer: "8 horas",
+        acceptable: ["8", "8h", "8 horas", "oito"],
+    },
+    {
+        question: "Um pai tem 40 anos e o filho 10. Daqui a 5 anos, qual será a diferença de idades?",
+        answer: "30 anos",
+        acceptable: ["30", "30 anos", "trinta"],
+    },
+    {
+        question: "Se hoje é domingo, que dia foi anteontem?",
+        answer: "Sexta-feira",
+        acceptable: ["sexta-feira", "sexta feira", "sexta", "sextafeira"],
+    },
+    {
+        question: "Qual não pertence ao grupo: cão, gato, leão, carro?",
+        answer: "Carro",
+        acceptable: ["carro"],
+    },
+
+    // --- Cultura geral ---
+    { question: "Qual é a capital de Portugal?", answer: "Lisboa", acceptable: ["lisboa"] },
+    { question: "Qual é o maior planeta do Sistema Solar?", answer: "Júpiter", acceptable: ["jupiter", "júpiter"] },
+    { question: "Quantos dias tem uma semana?", answer: "7", acceptable: ["7", "sete", "7 dias"] },
+    { question: "Qual é o oceano entre a Europa e a América?", answer: "Atlântico", acceptable: ["atlantico", "atlântico", "oceano atlantico"] },
+    { question: "Qual é a língua oficial do Brasil?", answer: "Português", acceptable: ["portugues", "português"] },
+    { question: "Quantas cores tem tradicionalmente o arco-íris?", answer: "7", acceptable: ["7", "sete", "7 cores"] },
+    { question: "Qual é a capital de França?", answer: "Paris", acceptable: ["paris"] },
+
+    // --- Desafios rápidos ---
+    { question: "Quantas letras tem a palavra COMPUTADOR?", answer: "10", acceptable: ["10", "dez", "10 letras"] },
+    { question: "Qual é o contrário de aumentar?", answer: "Diminuir", acceptable: ["diminuir", "reduzir", "baixar"] },
+    { question: "Qual é a terceira letra do alfabeto?", answer: "C", acceptable: ["c"] },
+    { question: "Quantos segundos existem num minuto?", answer: "60", acceptable: ["60", "sessenta", "60 segundos", "60s"] },
+    { question: "Qual é o dobro de 37?", answer: "74", acceptable: ["74"] },
+    { question: "Se tens 20 euros e gastas 7, quanto sobra?", answer: "13 euros", acceptable: ["13", "13€", "13 euros", "treze"] },
+    { question: "Quanto é 6 × 7?", answer: "42", acceptable: ["42"] },
+    { question: "Quanto é 50 ÷ 2?", answer: "25", acceptable: ["25"] },
+    { question: "Qual é o triplo de 9?", answer: "27", acceptable: ["27"] },
+    { question: "Quantos lados tem um quadrado?", answer: "4", acceptable: ["4", "quatro"] },
+    { question: "Quanto é 100 ÷ 4?", answer: "25", acceptable: ["25"] },
+    { question: "Qual é o contrário de quente?", answer: "Frio", acceptable: ["frio"] },
+    { question: "Quantas horas tem um dia?", answer: "24", acceptable: ["24", "vinte e quatro", "24 horas", "24h"] },
+    { question: "Quanto é 9 × 9?", answer: "81", acceptable: ["81"] },
+];
+
+// =============================================================================
+// VALIDAÇÃO INTELIGENTE DE RESPOSTAS (NORMALIZAÇÃO AVANÇADA)
+// =============================================================================
+
+// Normaliza texto: remove acentos, maiúsculas, pontuação, aspas e normaliza espaços/traços
+function normalizeAnswer(text) {
+    if (text === null || text === undefined) return "";
+    return String(text)
+        .trim()
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "") // remove acentos
+        .replace(/['"“”‘’`]/g, "")       // remove aspas
+        .replace(/[.,!?;:]/g, "")       // remove pontuação
+        .replace(/[-_–—]/g, " ")        // substitui hífenes e traços por espaços
+        .replace(/\s+/g, " ")           // unifica múltiplos espaços num único
+        .trim();
+}
+
+// Remove todos os espaços para permitir comparação sem espaços (ex.: "quarta feira" vs "quartafeira")
+function stripAllSpaces(text) {
+    return normalizeAnswer(text).replace(/\s+/g, "");
+}
+
+// Validação comparativa inteligente e flexível
+function checkReactionAnswer(userAnswer, challenge) {
+    const rawUser = String(userAnswer || "").trim();
+    if (!rawUser) return false;
+
+    const normUser = normalizeAnswer(rawUser);
+    const compactUser = stripAllSpaces(rawUser);
+
+    const normCorrect = normalizeAnswer(challenge.answer);
+    const compactCorrect = stripAllSpaces(challenge.answer);
+
+    // 1. Igualdade direta normalizada
+    if (normUser === normCorrect || compactUser === compactCorrect) {
+        return true;
+    }
+
+    // 2. Verificação na lista de aceitáveis do desafio
+    if (Array.isArray(challenge.acceptable)) {
+        for (const alt of challenge.acceptable) {
+            if (normUser === normalizeAnswer(alt) || compactUser === stripAllSpaces(alt)) {
+                return true;
+            }
+        }
+    }
+
+    // 3. Tolerância a respostas numéricas com/sem unidades (ex.: "8 horas" -> "8", "13 euros" -> "13")
+    const numMatch = challenge.answer.match(/^(\d+)\s*(horas|anos|euros|dias|minutos|macas|cores|letras|s|h)?$/i);
+    if (numMatch) {
+        const numOnly = numMatch[1];
+        if (
+            normUser === numOnly ||
+            normUser === `${numOnly}h` ||
+            normUser === `${numOnly}€` ||
+            normUser === `${numOnly} euros` ||
+            normUser === `${numOnly} eur` ||
+            normUser === `${numOnly} horas` ||
+            normUser === `${numOnly} anos` ||
+            normUser === `${numOnly} dias`
+        ) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+
+
+
+// Usa quizBank, reactionBank e checkReactionAnswer definidos em data.js
+
+const $ = (s) => document.querySelector(s);
+const $$ = (s) => [...document.querySelectorAll(s)];
+const PAGES = ["home", "logic", "reaction", "memory", "results"];
+const STEP = { logic: 1, reaction: 2, memory: 3, results: 4 };
+const RING = 276.46;
+const LIMIT = 10;
+
+let S, tick = null, wait = null, memT = [];
+
+const getBest = () => { try { return +localStorage.getItem("bthBest3") || 0; } catch { return 0; } };
+const setBest = (v) => { try { localStorage.setItem("bthBest3", v); } catch { /* ignora */ } };
+const shuffle = (a) => { const r = [...a]; for (let i = r.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [r[i], r[j]] = [r[j], r[i]]; } return r; };
+const pick = (a, n) => shuffle(a).slice(0, n);
+
+function fresh() {
+    S = {
+        secret: 1 + Math.floor(Math.random() * 100), lo: 1, hi: 100, tries: 0, logic: 0, logicDone: false, guesses: [],
+        cs: pick(reactionBank, 5), ci: 0, react: 0, ra: [], t0: 0, busy: false,
+        mem: { seq: [], pos: 0, input: false }, memScore: 0,
+    };
+}
+
+let scareT = null;
+function scare() {
+    const el = $("#scare");
+    el.hidden = false;
+    el.style.animation = "none"; void el.offsetWidth; el.style.animation = "";
+    try {
+        const ac = beep.ac || (beep.ac = new AudioContext()), o = ac.createOscillator(), g = ac.createGain();
+        o.type = "sawtooth"; o.frequency.setValueAtTime(140, ac.currentTime); o.frequency.exponentialRampToValueAtTime(40, ac.currentTime + 0.8);
+        g.gain.setValueAtTime(0.25, ac.currentTime); g.gain.linearRampToValueAtTime(0, ac.currentTime + 0.9);
+        o.connect(g); g.connect(ac.destination); o.start(); o.stop(ac.currentTime + 0.9);
+    } catch { /* sem som */ }
+    clearTimeout(scareT); scareT = setTimeout(() => (el.hidden = true), 1000);
+}
+
+function fb(el, msg, type) { el.textContent = msg; el.className = `feedback ${type}`; el.hidden = false; }
+function clearTimers() {
+    clearInterval(tick); clearTimeout(wait); tick = wait = null; memT.forEach(clearTimeout); memT = [];
+    $("#page-reaction").classList.remove("shake");
+    $("#explosion").hidden = true;
+}
+
+function go(page) {
+    clearTimers();
+    PAGES.forEach((p) => ($("#page-" + p).hidden = p !== page));
+    $("#stepper").hidden = page === "home";
+    $$("#stepper li").forEach((li, i) => {
+        li.classList.toggle("active", i + 1 === STEP[page]);
+        li.classList.toggle("done", i + 1 < STEP[page]);
+    });
+    window.scrollTo({ top: 0 });
+    ({ logic: renderLogic, reaction: renderChallenge, memory: renderMemory, results: renderResults }[page] || (() => {}))();
+}
+
+/* ---------- 1. Logic ---------- */
+function renderLogic() {
+    $("#range-fill").style.left = `${S.lo - 1}%`;
+    $("#range-fill").style.width = `${S.hi - S.lo + 1}%`;
+    $("#range-text").textContent = S.logicDone ? `Tentativas usadas: ${S.tries}` : `O número está entre ${S.lo} e ${S.hi}`;
+    $("#dots").replaceChildren(...Array.from({ length: LIMIT }, (_, i) => Object.assign(document.createElement("span"), { className: i < S.tries ? "used" : "" })));
+    $("#history").replaceChildren(...S.guesses.map((g) => Object.assign(document.createElement("span"), {
+        className: "chip" + (g.n === S.secret ? " ok" : ""), textContent: g.n === S.secret ? `${g.n} ✓` : `${g.n} ${g.n > S.secret ? "↓" : "↑"}`,
+    })));
+    $("#logic-form").hidden = S.logicDone;
+    $("#logic-finished").hidden = !S.logicDone;
+    if (!S.logicDone) $("#logic-guess").focus();
+}
+
+$("#logic-form").addEventListener("submit", (e) => {
+    e.preventDefault();
+    const input = $("#logic-guess"), n = input.valueAsNumber, f = $("#logic-feedback");
+    if (!Number.isInteger(n) || n < 1 || n > 100) return fb(f, "Escreve um número inteiro entre 1 e 100.", "warning");
+    S.tries++; S.guesses.push({ n });
+    if (n === S.secret) {
+        S.logic = 11 - S.tries; S.logicDone = true;
+        fb(f, `Acertaste em ${S.tries} tentativa(s) e ganhaste ${S.logic} pontos.`, "success");
+    } else {
+        if (n > S.secret) { S.hi = Math.min(S.hi, n - 1); fb(f, "Demasiado alto. Tenta um número menor.", "warning"); }
+        else { S.lo = Math.max(S.lo, n + 1); fb(f, "Demasiado baixo. Tenta um número maior.", "warning"); }
+        if (S.tries >= LIMIT) { S.logicDone = true; fb(f, `Sem tentativas. O número secreto era ${S.secret}. 0 pontos.`, "error"); }
+    }
+    input.value = "";
+    renderLogic();
+});
+
+/* ---------- 3. Reaction ---------- */
+function paintTimer(rem) {
+    $("#ring").style.strokeDashoffset = RING * (1 - rem / LIMIT);
+    $("#timer-value").textContent = rem.toFixed(1);
+    const t = $("#timer");
+    t.className = "timer" + (rem <= 3 ? " danger" : rem <= 5 ? " warn" : "");
+    $("#timer-icon").textContent = rem <= 3 ? "💣" : rem <= 5 ? "⚠️" : "⏱️";
+}
+
+function renderChallenge() {
+    if (S.ci >= 5) return go("memory");
+    const c = S.cs[S.ci];
+    S.busy = false;
+    $("#reaction-progress").textContent = `Desafio ${S.ci + 1} de 5 · ${S.react} pontos`;
+    $("#reaction-question").textContent = c.question;
+    $("#reaction-feedback").hidden = true;
+    $("#explosion").hidden = true;
+    const inp = $("#reaction-answer");
+    inp.value = ""; inp.disabled = false;
+    $("#reaction-form button").disabled = false;
+    inp.focus();
+    S.t0 = Date.now();
+    paintTimer(LIMIT);
+    clearInterval(tick);
+    tick = setInterval(() => {
+        const rem = Math.max(0, LIMIT - (Date.now() - S.t0) / 1000);
+        paintTimer(rem);
+        if (rem <= 0) settle("", true);
+    }, 50);
+}
+
+function boom() {
+    const page = $("#page-reaction"), box = $("#explosion");
+    page.classList.remove("shake"); void page.offsetWidth; page.classList.add("shake");
+    const label = Object.assign(document.createElement("strong"), { textContent: "💥 BOOM!" });
+    const parts = Array.from({ length: 16 }, (_, i) => {
+        const p = document.createElement("span"), a = (i / 16) * 6.283, d = 70 + Math.random() * 110;
+        p.className = "p"; p.textContent = ["🔥", "💥", "✨", "💨"][i % 4];
+        p.style.setProperty("--x", `${Math.cos(a) * d}px`); p.style.setProperty("--y", `${Math.sin(a) * d * 0.5}px`);
+        return p;
+    });
+    box.replaceChildren(label, ...parts); box.hidden = false;
+}
+
+function settle(answer, timedOut) {
+    if (S.busy) return;
+    S.busy = true;
+    clearInterval(tick);
+    $("#reaction-answer").disabled = true;
+    $("#reaction-form button").disabled = true;
+    const c = S.cs[S.ci], f = $("#reaction-feedback");
+    const elapsed = timedOut ? LIMIT : Math.min(LIMIT, (Date.now() - S.t0) / 1000);
+    const ok = !timedOut && checkReactionAnswer(answer, c);
+    if (ok) S.react += 2; else scare();
+    S.ra.push({ q: c.question, a: timedOut ? "Tempo esgotado" : answer || "Sem resposta", c: c.answer, ok, t: elapsed });
+    if (timedOut) { boom(); paintTimer(0); $("#timer-icon").textContent = "💥"; fb(f, `Tempo esgotado. A resposta era «${c.answer}».`, "error"); }
+    else if (ok) fb(f, `Correto em ${elapsed.toFixed(1)} s! +2 pontos.`, "success");
+    else fb(f, `Incorreto. A resposta era «${c.answer}».`, "error");
+    wait = setTimeout(() => { S.ci++; renderChallenge(); }, timedOut ? 1900 : 1400);
+}
+
+$("#reaction-form").addEventListener("submit", (e) => {
+    e.preventDefault();
+    settle($("#reaction-answer").value, false);
+});
+
+/* ---------- 4. Memory Sequence ---------- */
+const pads = $$(".pad");
+const mt = (fn, ms) => memT.push(setTimeout(fn, ms));
+function beep(i) {
+    try {
+        const ac = beep.ac || (beep.ac = new AudioContext()), o = ac.createOscillator(), g = ac.createGain();
+        o.frequency.value = [330, 262, 392, 494][i]; g.gain.value = 0.07;
+        o.connect(g); g.connect(ac.destination); o.start(); o.stop(ac.currentTime + 0.22);
+    } catch { /* sem som */ }
+}
+function flashPad(i, ms = 380) { pads[i].classList.add("lit"); beep(i); mt(() => pads[i].classList.remove("lit"), ms); }
+
+function renderMemory() {
+    S.mem = { seq: [], pos: 0, input: false }; S.memScore = 0;
+    $("#mem-status").textContent = "Memoriza a sequência e repete-a. Cada ronda vale 1 ponto (máx. 10).";
+    $("#mem-start").hidden = false; $("#mem-next").hidden = true;
+}
+function memRound() {
+    const m = S.mem; m.seq.push(Math.floor(Math.random() * 4)); m.pos = 0; m.input = false;
+    $("#mem-status").textContent = `Ronda ${m.seq.length} · Observa…`;
+    m.seq.forEach((n, k) => mt(() => flashPad(n), 700 + k * 650));
+    mt(() => { m.input = true; $("#mem-status").textContent = `Ronda ${m.seq.length} · A tua vez!`; }, 700 + m.seq.length * 650);
+}
+function memEnd(msg) {
+    S.mem.input = false;
+    $("#mem-status").textContent = `${msg} Pontuação: ${S.memScore} / 10.`;
+    $("#mem-next").hidden = false; $("#mem-next").focus();
+}
+$("#mem-start").addEventListener("click", () => { $("#mem-start").hidden = true; mt(memRound, 300); });
+pads.forEach((p, i) => p.addEventListener("click", () => {
+    const m = S.mem; if (!m.input) return;
+    flashPad(i, 200);
+    if (i !== m.seq[m.pos]) { scare(); return memEnd("Falhaste a sequência."); }
+    if (++m.pos < m.seq.length) return;
+    S.memScore = m.seq.length;
+    if (m.seq.length >= 10) return memEnd("Sequência perfeita!");
+    m.input = false; mt(memRound, 900);
+}));
+$("#mem-next").addEventListener("click", () => go("results"));
+
+/* ---------- Resultados ---------- */
+function renderResults() {
+    const games = [["Logic Challenge", S.logic], ["Reaction Challenge", S.react], ["Memory Sequence", S.memScore]];
+    const total = games.reduce((n, g) => n + g[1], 0), pct = (total / 30) * 100;
+    const rating = pct <= 20 ? "Iniciante" : pct <= 40 ? "Em desenvolvimento" : pct <= 60 ? "Bom desempenho" : pct <= 80 ? "Desempenho elevado" : "Mestre do raciocínio";
+    $("#final-total").textContent = total;
+    $("#final-rating").textContent = `${pct.toFixed(0)}% · ${rating}`;
+    $("#breakdown").replaceChildren(...games.map(([name, v]) => {
+        const row = document.createElement("div"), fill = document.createElement("div");
+        row.innerHTML = `<span>${name}</span><div class="bar"></div><b>${v}/10</b>`;
+        row.querySelector(".bar").appendChild(fill);
+        requestAnimationFrame(() => (fill.style.width = `${v * 10}%`));
+        return row;
+    }));
+    const ring = $("#final-ring");
+    ring.style.strokeDashoffset = 439.8;
+    setTimeout(() => (ring.style.strokeDashoffset = 439.8 * (1 - total / 30)), 80);
+
+    const prev = getBest(), rec = $("#final-record");
+    rec.hidden = !(total > prev && total > 0);
+    if (!rec.hidden) { rec.textContent = prev ? `Novo recorde! Anterior: ${prev}/30` : "Primeiro recorde guardado!"; }
+    if (total > prev) { setBest(total); $("#best").textContent = total; }
+
+    const row = (txt, ok) => Object.assign(document.createElement("p"), { className: ok ? "ok" : "no", textContent: txt });
+    $("#review").replaceChildren(
+        ...S.ra.map((r, i) => row(`Reação ${i + 1}: ${r.q} → ${r.a}${r.ok ? ` (${r.t.toFixed(1)} s)` : ` (certa: ${r.c})`}`, r.ok)),
+    );
+}
+
+/* ---------- Navegação ---------- */
+$("#start-button").addEventListener("click", () => go("logic"));
+$("#to-quiz-button").addEventListener("click", () => go("reaction"));
+$("#play-again-button").addEventListener("click", () => { fresh(); go("home"); });
+$("#brand").addEventListener("click", (e) => { e.preventDefault(); fresh(); go("home"); });
+
+fresh();
+$("#best").textContent = getBest();
+go("home");
+
+</script>
+</body>
+</html>
