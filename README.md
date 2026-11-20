@@ -1,6 +1,4 @@
-==============================================================
 BRAIN TRAINING HUB
-==============================================================
 
 Disciplina:  Oficina de Multimédia - 12.º Ano - CRSI
 Ano Letivo:  2026/2027
@@ -9,9 +7,7 @@ Turma:       12A3
 Link da Aplicação Web: (por preencher: link do GitHub Pages)
 
 
-==============================================================
 1. VISÃO GERAL DO PROJETO
-==============================================================
 
 Descrição:
 O Brain Training Hub é um dashboard web com três jogos curtos de raciocínio, reflexos e memória. No fim dos três jogos, o utilizador recebe uma pontuação total sobre 30, uma percentagem e uma classificação, e o melhor resultado fica guardado no navegador.
@@ -20,9 +16,7 @@ Proposta escolhida:
 Proposta 1 — Dashboard Web de Ferramentas Multimédia com IA.
 
 
-==============================================================
 2. ESTRUTURA DO CÓDIGO E FUNCIONALIDADES INTEGRADAS
-==============================================================
 
 O projeto mistura exercícios adaptados das fichas de Python com um jogo novo criado com IA.
 
@@ -59,18 +53,14 @@ NOTA SOBRE A TECNOLOGIA
 O pedido inicial à IA era para uma aplicação em Python com Streamlit. A versão final foi feita em HTML, CSS e JavaScript, por isso não existe app.py. A lógica dos jogos mantém os mesmos conceitos das fichas de Python, escritos em JavaScript.
 
 
-==============================================================
 3. REGISTO DE UTILIZAÇÃO DA IA
-==============================================================
 
 Ferramentas usadas:
   - ChatGPT — para organizar as ideias do projeto.
   - Claude e Antigravity — para escrever e corrigir o código.
 
 
---------------------------------------------------------------
 3.1 Prompt para conversão Web/HTML
---------------------------------------------------------------
 
 O primeiro prompt, enviado à IA, pedia a aplicação completa. Resumo do que continha:
 
@@ -108,9 +98,7 @@ Prompt completo:
   10. Formato da resposta — Código completo de app.py, explicação simples das partes principais, lista de funcionalidades, instruções para testar e lista de possíveis erros com soluções. Sem omitir partes do código.
 
 
---------------------------------------------------------------
 3.2 Prompt para ampliação e construção de funcionalidades
---------------------------------------------------------------
 
 Depois de a primeira versão estar criada, o principal pedido foi para corrigir a ligação entre os ficheiros:
 
@@ -119,18 +107,14 @@ Depois de a primeira versão estar criada, o principal pedido foi para corrigir 
 Pedi ainda à IA para acrescentar elementos novos, como a barra do tempo e os efeitos de som e de imagem quando o utilizador erra (resumo do pedido). O jogo Memory Sequence foi criado com IA como jogo novo.
 
 
---------------------------------------------------------------
 3.3 Dificuldades e erros corrigidos com a IA
---------------------------------------------------------------
 
 O maior problema foi que, originalmente, o site não funcionava porque os vários ficheiros (HTML, CSS e JavaScript) não estavam bem interligados. O HTML não carregava corretamente o CSS e o JavaScript, e partes do código procuravam elementos e ficheiros que não existiam.
 
 Pedi à IA para interligar os ficheiros corretamente. A solução foi organizar o projeto em ficheiros separados, cada um com uma função (estrutura, estilo, dados e lógica), e garantir que o index.html os carrega pela ordem certa. Depois disso, o site passou a funcionar como previsto.
 
 
---------------------------------------------------------------
 3.4 Otimização de Layout
---------------------------------------------------------------
 
 Mantive sempre o layout original proposto pela IA, porque o design inicial já correspondia à minha ideia. Apenas pedi alterações em algumas decorações:
 
@@ -139,9 +123,7 @@ Mantive sempre o layout original proposto pela IA, porque o design inicial já c
   - o efeito visual quando o utilizador erra.
 
 
-==============================================================
 4. ESTRUTURA DE FICHEIROS DO REPOSITÓRIO
-==============================================================
 
   index.html   – página principal do Dashboard / Web App (estrutura das páginas)
   style.css    – folha de estilos: cores, layout, animações e responsividade
@@ -152,9 +134,7 @@ Mantive sempre o layout original proposto pela IA, porque o design inicial já c
 Não existe pasta de assets: os sons são gerados no navegador e os ícones são emojis.
 
 
-==============================================================
 5. REFLEXÃO CRÍTICA E APRENDIZAGEM
-==============================================================
 
 O que correu melhor:
 O design correu muito bem. A IA conseguiu fazer a minha ideia logo à primeira, e por isso mantive o layout original durante todo o projeto, mudando apenas alguns pormenores de decoração.
