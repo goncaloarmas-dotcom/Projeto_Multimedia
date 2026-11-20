@@ -4,7 +4,7 @@ Disciplina:  Oficina de Multimédia - 12.º Ano - CRSI
 Ano Letivo:  2026/2027
 Autor:       Gonçalo Monteiro Borges Armas Gonçalves
 Turma:       12A3
-Link da Aplicação Web: (por preencher: link do GitHub Pages)
+Link da Aplicação Web:  https://goncaloarmas-dotcom.github.io/Projeto_Multimedia/
 
 
 1. VISÃO GERAL DO PROJETO
